@@ -5,26 +5,25 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Hello world!
- *
+ * Created by erpy on 16. 3. 1..
  */
-public class App {
-    public static void main( String[] args ) {
+public class JedisGet {
+    static public void main(String args[]) throws Exception {
         Jedis jedis = null;
         JedisPool pool = new JedisPool(new JedisPoolConfig(), "www.kiwitomato.com");
         try {
             jedis = pool.getResource();
+            String result = jedis.get("foo");
+            System.out.println("get foo ==> " + result);
 
-            jedis.set("foo", "bar");
-            jedis.expire("foo", 10);
-
-            String foobar = jedis.get("foo");
-            jedis.zadd("sose", 0, "car");
-            jedis.zadd("sose", 0, "bike");
             Set<String> sose = jedis.zrange("sose", 0, -1);
+            for (String data : sose) {
+                System.out.println("result ==> " + data);
+            }
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         } finally {

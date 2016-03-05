@@ -8,10 +8,9 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Hello world!
- *
+ * Created by erpy on 16. 3. 5..
  */
-public class App {
+public class JedisExpireTest {
     public static void main( String[] args ) {
         Jedis jedis = null;
         JedisPool pool = new JedisPool(new JedisPoolConfig(), "www.kiwitomato.com");
@@ -21,10 +20,20 @@ public class App {
             jedis.set("foo", "bar");
             jedis.expire("foo", 10);
 
-            String foobar = jedis.get("foo");
-            jedis.zadd("sose", 0, "car");
-            jedis.zadd("sose", 0, "bike");
-            Set<String> sose = jedis.zrange("sose", 0, -1);
+            jedis.set("foo1", "bar");
+            jedis.expire("foo1", 15);
+
+            while (true) {
+                String result = jedis.get("foo");
+                System.out.println("get foo ==> " + result);
+
+                String result2 = jedis.get("foo1");
+                System.out.println("get foo1 ==> " + result2);
+                if (result2==null) {
+                    break;
+                }
+                Thread.sleep(1000);
+            }
         } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         } finally {
